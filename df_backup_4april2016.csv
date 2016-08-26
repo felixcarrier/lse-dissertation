@@ -1,0 +1,88 @@
+"","pollster","n","start.date","Trump","mode","population","dayofyear"
+"1","Morning Consult",770,2016-04-01,0.45,"internet","RV",92
+"2","NBC/SurveyMonkey",3353,2016-03-28,0.45,"internet","RV",88
+"3","IBD/TIPP",388,2016-03-28,0.38,"live phone","RV",88
+"4","Ipsos/Reuters",616,2016-03-27,0.44,"internet","RV",87
+"5","YouGov/Economist",525,2016-03-26,0.48,"internet","LV",86
+"6","NBC/SurveyMonkey",1611,2016-03-21,0.48,"internet","RV",81
+"7","Pew",834,2016-03-17,0.41,"live phone","RV",77
+"8","Morning Consult",803,2016-03-24,0.49,"internet","RV",84
+"9","PPP (D)",505,2016-03-24,0.42,"automated phone","LV",84
+"10","Ipsos/Reuters",523,2016-03-19,0.45,"internet","RV",79
+"11","McLaughlin (R)",436,2016-03-17,0.45,"internet","LV",77
+"12","FOX",388,2016-03-20,0.41,"live phone","LV",80
+"13","Bloomberg/Selzer",366,2016-03-19,0.4,"live phone","LV",79
+"14","Morning Consult",754,2016-03-18,0.45,"internet","RV",78
+"15","Quinnipiac",652,2016-03-16,0.43,"live phone","RV",76
+"16","CBS/Times",362,2016-03-17,0.46,"live phone","LV",77
+"17","CNN",397,2016-03-17,0.47,"live phone","LV",77
+"18","Monmouth University",353,2016-03-17,0.41,"live phone","RV",77
+"19","NBC/SurveyMonkey",3489,2016-03-14,0.45,"internet","RV",74
+"20","Morning Consult",758,2016-03-16,0.43,"internet","RV",76
+"21","Rasmussen",719,2016-03-16,0.43,"automated phone","LV",76
+"22","Ipsos/Reuters",605,2016-03-12,0.46,"internet","RV",72
+"23","Morning Consult",1516,2016-03-11,0.42,"internet","RV",71
+"24","NBC/SurveyMonkey",2280,2016-03-07,0.44,"internet","RV",67
+"25","YouGov/Economist",400,2016-03-10,0.53,"internet","LV",70
+"26","Ipsos/Reuters",639,2016-03-05,0.41,"internet","RV",65
+"27","Morning Consult",781,2016-03-04,0.4,"internet","RV",64
+"28","ABC/Post",400,2016-03-03,0.34,"live phone","RV",63
+"29","NBC/WSJ",397,2016-03-03,0.3,"live phone","LV",63
+"30","NBC/SurveyMonkey",6481,2016-02-29,0.39,"internet","RV",60
+"31","Ipsos/Reuters",542,2016-02-27,0.41,"internet","RV",58
+"32","NBC/SurveyMonkey",8759,2016-02-22,0.4,"internet","RV",53
+"33","Morning Consult",777,2016-02-26,0.44,"internet","RV",57
+"34","CNN",427,2016-02-24,0.49,"live phone","RV",55
+"35","YouGov/Economist",456,2016-02-24,0.44,"internet","LV",55
+"36","Morning Consult",1430,2016-02-24,0.42,"internet","RV",55
+"37","Ipsos/Reuters",493,2016-02-20,0.42,"internet","RV",51
+"38","IBD/TIPP",400,2016-02-19,0.31,"live phone","RV",50
+"39","Rasmussen",697,2016-02-21,0.36,"automated phone","LV",52
+"40","NBC/SurveyMonkey",3368,2016-02-15,0.36,"internet","RV",46
+"41","FOX",404,2016-02-15,0.36,"live phone","LV",46
+"42","Ipsos/Reuters",476,2016-02-13,0.4,"internet","RV",44
+"43","McLaughlin (R)",422,2016-02-11,0.35,"internet","LV",42
+"44","Morning Consult",662,2016-02-15,0.41,"internet","RV",46
+"45","NBC/WSJ",400,2016-02-14,0.26,"live phone","LV",45
+"46","CBS",581,2016-02-12,0.35,"live phone","LV",43
+"47","Robert Morris University",252,2016-02-11,0.37,"internet","LV",42
+"48","Suffolk/USA Today",358,2016-02-11,0.35,"live phone","LV",42
+"49","YouGov/Economist",472,2016-02-11,0.39,"internet","LV",42
+"50","Quinnipiac",602,2016-02-10,0.39,"live phone","RV",41
+"51","NBC/SurveyMonkey",3411,2016-02-08,0.38,"internet","RV",39
+"52","Morning Consult",710,2016-02-10,0.44,"internet","RV",41
+"53","Ipsos/Reuters",513,2016-02-06,0.35,"internet","RV",37
+"54","Morning Consult",1757,2016-02-03,0.38,"internet","RV",34
+"55","NBC/SurveyMonkey",2887,2016-02-01,0.35,"internet","RV",32
+"56","Rasmussen",725,2016-02-03,0.31,"automated phone","LV",34
+"57","Quinnipiac",507,2016-02-02,0.31,"live phone","RV",33
+"58","Morning Consult",641,2016-02-02,0.38,"internet","RV",33
+"59","PPP (D)",531,2016-02-02,0.25,"automated phone","LV",33
+"60","Ipsos/Reuters",568,2016-01-30,0.36,"internet","RV",30
+"61","Morning Consult",1491,2016-01-29,0.41,"internet","RV",29
+"62","NBC/SurveyMonkey",3057,2016-01-25,0.39,"internet","RV",25
+"63","YouGov/Economist",481,2016-01-27,0.43,"internet","LV",27
+"64","IBD/TIPP",395,2016-01-22,0.31,"live phone","RV",22
+"65","Bloomberg/Purple Strategies",1021,2016-01-22,0.34,"internet","LV",22
+"66","CNN",405,2016-01-21,0.41,"live phone","RV",21
+"67","Morning Consult",1552,2016-01-21,0.4,"internet","RV",21
+"68","ABC/Post",356,2016-01-20,0.37,"live phone","RV",20
+"69","Public Religion Research Institute",381,2016-01-20,0.31,"live phone","A",20
+"70","NBC/SurveyMonkey",2327,2016-01-18,0.39,"internet","RV",18
+"71","FOX",405,2016-01-18,0.34,"live phone","LV",18
+"72","Zogby (Internet)",294,2016-01-19,0.45,"internet","LV",19
+"73","Ipsos/Reuters",588,2016-01-16,0.36,"internet","A",16
+"74","YouGov/Economist",476,2016-01-15,0.38,"internet","LV",15
+"75","Monmouth University",385,2016-01-15,0.36,"live phone","RV",15
+"76","Morning Consult",1635,2016-01-14,0.39,"internet","RV",14
+"77","NBC/SurveyMonkey",3342,2016-01-11,0.38,"internet","RV",11
+"78","Ipsos/Reuters",575,2016-01-09,0.38,"internet","A",9
+"79","NBC/WSJ",400,2016-01-09,0.33,"live phone","LV",9
+"80","YouGov/Economist",552,2016-01-09,0.36,"internet","LV",9
+"81","Gravis Marketing/One America News",832,2016-01-10,0.41,"automated phone","LV",10
+"82","Morning Consult",878,2016-01-08,0.42,"internet","RV",8
+"83","CBS/Times",442,2016-01-07,0.36,"live phone","LV",7
+"84","NBC/SurveyMonkey",2852,2016-01-04,0.38,"internet","RV",4
+"85","IBD/TIPP",389,2016-01-04,0.34,"live phone","RV",4
+"86","FOX",423,2016-01-04,0.35,"live phone","LV",4
+"87","Ipsos/Reuters",634,2016-01-02,0.41,"internet","A",2
