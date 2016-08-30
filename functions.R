@@ -143,7 +143,7 @@ plot.llcv <- function(llcv.reg, ...){
        ...)
   points(llcv.reg$bw,llcv.reg$cv$rmse[which(llcv.reg$bw == llcv.reg$cv$bandwidths)],pch=16)
   mtext(paste("Bandwidth with minimum RMSE is", llcv.reg$cv$best.bandwidth))
-  abline(v = llcv.reg$cv$best.bandwidth, col=2)
+  abline(v = llcv.reg$cv$best.bandwidth, col=2, lty=2)
 }
 
 
@@ -291,7 +291,7 @@ elasticnetcv <- function(x,y, bandwidths=1:30, loo=FALSE, n.folds=10, alpha=0){
   
   
   temp.fitted <- numeric()
-  lambda.min <- cv.glmnet(x= as.matrix(X), y=as.matrix(y))$lambda.min
+  lambda.min <- cv.glmnet(x= as.matrix(X), y=as.matrix(y), alpha=alpha)$lambda.min
   
   for (k in 1:n.folds){
     

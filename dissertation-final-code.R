@@ -7,7 +7,7 @@ reset.df()
 
 
 # plot of the data
-plot(x,y, pch=16, col=tgrey(0.4), xlab="2016 day of year", ylab="% support for Trump"
+plot(x,y, pch=16, col=tgrey(0.4), xlab="2016 day of year", ylab="Support for Trump"
      , ylim=c(min(y)-0.02, max(y)+0.02)
      ,cex=2)
 
@@ -41,7 +41,7 @@ reset.df()
 ll3 <- llreg(x,y,bandwidth = 3)
 ll15 <- llreg(x,y,bandwidth = 15)
 
-plot(x,y, pch=16, col=tgrey(0.2), xlab="2016 day of year", ylab="% support for Trump", cex=2
+plot(x,y, pch=16, col=tgrey(0.2), xlab="2016 day of year", ylab="Support for Trump", cex=2
      , ylim=c(min(y)-0.07, max(y)+0.02))
 lines(ll3, col=1, lwd=3 )#, lty=2)
 lines(ll15, col=2, lwd=3 )#, lty=4)
@@ -138,16 +138,6 @@ round(test.glmcv$fold.coefficients, 2)
 # sum of coefficients
 colSums(test.glmcv$fold.coefficients)
 
-# #check fold of obs #1
-# exdf[1,"fold.assign"]
-# # fold 3, so leave that fold out and fit glm on folds 1-2U4-10
-# tempreg <- glm(y~. - fold.assign, data=exdf[exdf$fold.assign != 3,])
-# 
-# options(scipen = 999)
-# data.frame(coefficient = round(unlist(tempreg$coefficients), 2) )
-# 
-# # generate fitted value for obs in fold 3 (including obs#1)
-# predict(tempreg, newdata= exdf[exdf$fold.assign == 3,])
 
 # density
 set.seed(1)
@@ -168,20 +158,6 @@ range(y)
 #---------------------------
 # Comparison with (ridge and lasso) linear stacking
 #---------------------------
-# 
-# library(MASS)
-# tempreg <- lm.ridge(y~. - fold.assign, data=exdf[exdf$fold.assign != 3,], lambda = seq(0, .1, .001))
-# lambda <- tempreg$GCV[which.min(tempreg$GCV)] 
-# coef.lambda <- tempreg$coef[colnames(tempreg$coef) == names(lambda)]
-# 
-# options(scipen = 999)
-# data.frame(bw = row.names(tempreg$coef), coefficient = round(unlist(coef.lambda), 4) )
-# 
-# # generate fitted value for obs in fold 3 (including obs#1)
-# predict(tempreg, newdata= exdf[exdf$fold.assign == 3,])
-# NO PREDICT method for lm.rigde
-
-#****
 
 
 library(glmnet)
@@ -208,14 +184,29 @@ set.seed(1)
 reset.df()
 ridge.rep <- replicate(1000, elasticnetcv(x,y, n.folds = 10, alpha = 0))
 RMSEs.ridge <- unlist(ridge.rep["rmse",])
-ridge.lambda <- unlist(ridge.rep["lambda",])
+#ridge.lambda <- unlist(ridge.rep["lambda",])
+
+set.seed(1)
+ridge.lambda <- replicate(1000,cv.glmnet(x= as.matrix(X), y=as.matrix(y), alpha=0)$lambda.min)
 
 #hist of lambdas
-hist(ridge.lambda, xlim=c(0,0.0010), breaks=1000, col=tgrey(0.5))
-abline(v=median(ridge.lambda), col=2)
-text(x=median(ridge.lambda), y=60, "median", col=2)
-abline(v=mean(ridge.lambda), col=4)
-text(x=mean(ridge.lambda), y=70, "mean", col=4)
+options(scipen = 999)
+hist(ridge.lambda
+     #, xlim=c(0,0.0020)
+     , breaks=12
+     , col=tgrey(0.2), main="")
+
+abline(v=median(ridge.lambda), col="blue", lwd=3, lty=2)
+abline(v=mean(ridge.lambda), col="red", lwd=3, lty=2)
+text(x=0.09, y=230, paste("Median:", round(median(ridge.lambda), 5)), col="blue", pos=2)
+text(x=0.09, y=180, paste("Mean:", round(mean(ridge.lambda), 5)), col="red", pos=2)
+
+
+
+mean(ridge.lambda)
+
+
+
 
 
 # show example of coefs
@@ -254,11 +245,10 @@ t.test(RMSEs.bw15, RMSEs.ridge, var.equal=FALSE, paired=FALSE)
 
 
 ### LASSO
-set.seed(1)
 reset.df()
+set.seed(1)
 lasso.rep <- replicate(1000, elasticnetcv(x,y , n.folds = 10, alpha = 1))
 RMSEs.lasso <- unlist(lasso.rep["rmse",])
-lasso.lambda <- unlist(lasso.rep["lambda",])
 
 
 # example of coef
@@ -293,6 +283,27 @@ mean(RMSEs.lasso)
 sd(RMSEs.lasso)
 
 
+
+#hist of lambdas
+
+set.seed(1)
+lasso.lambda <- replicate(1000,cv.glmnet(x= as.matrix(X), y=as.matrix(y), alpha=1)$lambda.min)
+
+
+options(scipen = 999)
+hist(lasso.lambda
+     #, xlim=c(0,0.0020)
+     , breaks=50, col=tgrey(0.2), main="")
+abline(v=median(lasso.lambda), col="blue", lwd=3, lty=2)
+abline(v=mean(lasso.lambda), col="red", lwd=3, lty=2)
+text(x=0.014, y=160, paste("Mean:", round(mean(lasso.lambda), 5)), col="red", pos=2)
+text(x=0.014, y=200, paste("Median:", round(median(lasso.lambda), 5)), col="blue", pos=2)
+
+
+
+
+
+
 ## compare RIDGE and LASSO
 
 # check equal variance
@@ -323,70 +334,9 @@ plot(density(RMSEs.nonneg.sum1))
 set.seed(1)
 temp.reg <- lrm.cv(x,y,type=2)
 
-# some.coef <- temp.reg$fold.coefficients[,1]
-# some.coef2 <- temp.reg$fold.coefficients[,2]
-# some.coef3 <- temp.reg$fold.coefficients[,5]
-# 
-# 
-# plot(x=2:30,y=round(some.coef, 4)
-#      , type="h"
-#      , lwd=7
-#      , col=ifelse(some.coef>0, "green", 1)
-#      #, lty=ifelse(test>0, 4, 1)
-#      , ylab="Coefficient"
-#      , xlab="Bandwidth")
-# mtext("For each fold, sum of coefficients is 1", cex = 0.8)
-# 
-# points(x=2:30,y=round(some.coef2, 4)
-#        , type="h"
-#        , lwd=7
-#        , col=ifelse(some.coef2>0, "blue", 1)
-#        )
-# 
-# points(x=2:30,y=round(some.coef3, 4)
-#        , type="h"
-#        , lwd=7
-#        , col=ifelse(some.coef3>0, "red", 1)
-# )
-# 
-# legend("topleft"
-#        , legend=c("Fold 1", "Fold 2", "Fold 5")
-#        , fill =c("green", "blue", "red")
-#        , horiz=TRUE
-#        , cex=0.7
-#        , bg=tgrey(0.2))
 
 # show table in latex
 round( temp.reg$fold.coefficients, 3)
-
-
-# # density plot 
-# list.RMSEs <- list(bw3=rep(-10, 1000)
-#                     ,bw15=rep(-10, 1000)
-#                     ,ridge = RMSEs.ridge
-#                    , lasso = rep(-10, 1000)
-#                    , non.neg.sum.1=RMSEs.nonneg.sum1
-#                    ) 
-# 
-# density.plot( list.RMSEs
-#               , xlim=c(0.0380, 0.048)
-#               , ylim=c(0,700)
-#               , legend.cex = 0.6
-#               , main=""
-#               , xlab="RMSE"
-#               , yaxt="n")
-# abline(v=mean(RMSEs.bw3), col=1, lty=2, lwd=2)
-# abline(v=mean(RMSEs.bw15), col=2, lty=2, lwd=2)
-# abline(v=mean(RMSEs.lasso), col=4, lty=2, lwd=2)
-# 
-# text(x=0.04375, y=700, "bw3", col=1)
-# text(x=0.0432, y=650, "bw15", col=2)
-# text(x=0.0425, y=700, "lasso", col=4)
-# 
-# abline(v=mean(RMSEs.bw15), col=2, lty=2, lwd=2)
-# #abline(v=mean(RMSEs.ridge), col=3, lty=2, lwd=2)
-# abline(v=mean(RMSEs.lasso), col=4, lty=2, lwd=2)
-
 
 
 # density plot
@@ -435,15 +385,6 @@ round(mean(RMSEs.nonneg.sum1), 5)
 round(sd(RMSEs.nonneg.sum1), 5)
 
 
-
-# for (i in 1:length(list.RMSEs)) abline(v=mean(list.RMSEs[[i]]), col=i, lty=2, lwd=2)
-# 
-# abline(v=mean(RMSEs.bw3), col=1, lty=2, lwd=2)
-# abline(v=mean(RMSEs.bw15), col=2, lty=2, lwd=2)
-# abline(v=mean(RMSEs.nonneg.sum1), col=3, lty=2, lwd=2)
-# abline(h=0)
-
-
 # check equal variance
 var.test(RMSEs.bw15, RMSEs.nonneg.sum1)
 # pvalue > 0.05, so CAN assume that variance are homogeneous
@@ -479,31 +420,6 @@ any(temp.reg2$data$y.fitted > max(y) | temp.reg2$data$y.fitted < min(y))
 
 plot(x,temp.reg2$data$y.fitted, pch=19, col=tgrey(0.4))
 lines(ll15, col=2)
-
-
-# # show sum of coefficients for 1 example
-# set.seed(1)
-# hist(colSums(  lrm.cv(x,y, type=2, sum.to.one = FALSE)$fold.coefficients  )
-#      , main=""
-#      , xlab="Sum of coefficients"
-#      , breaks=10
-#      , yaxp  = c(0, 3, 3)
-#      , xaxp  = c(0.990, 1.015, 5)
-#      , xlim=c(0.990, 1.015)
-#      , col=tgrey(0.4))
-
-
-# # density plot 
-# list.RMSEs <- list(bw3=RMSEs.bw3,bw15=RMSEs.bw15,  non.neg.sum.1=RMSEs.nonneg.sum1, non.neg=RMSEs.nonneg) 
-# 
-# density.plot( list.RMSEs
-#               , xlim=c(0.0410, 0.057)
-#               , ylim=c(0,1300)
-#               , legend.cex = 0.6
-#               , main=""
-#               , xlab="RMSE"
-#               , yaxt="n"
-#               , legend.ncol = 2)
 
 
 # density plot
@@ -566,88 +482,6 @@ var.test(RMSEs.nonneg.sum1, RMSEs.nonneg)
 # pvalue > 0.05, so CAN assume that variance are homogeneous
 options(scipen = 999)
 t.test(RMSEs.nonneg.sum1, RMSEs.nonneg, var.equal=TRUE, paired=FALSE)
-
-
-
-
-
-####################
-# Additive models
-####################
-
-reset.df()
-set.seed(1)
-#8 terms: takes about 1h
-#1 term with interaction: takes about 7 min
-#test.gam <- replicate(1000, gamcv(x,y)$rmse)   #s(2,15)
-#test.gam2.21 <- replicate(1000, gamcv(x,y, bandwidths = c(1,2,21))$rmse)   #s(2,21)
-#RMSEs.gam.3.15 <- replicate(1000, gamcv(x,y, bandwidths = c(1,3,15))$rmse)   #s(3,15)
-#test.gam2.30 <- replicate(1000, gamcv(x,y, bandwidths = c(1,2,30))$rmse)   #s(2,30)
-#RMSEs.gam.2p30 <- replicate(1000, gamcv(x,y, bandwidths = c(1,2,30))$rmse)   #s(2) + s(30)
-RMSEs.gam.3by15 <- replicate(1000, gamcv(x,y, bandwidths = c(1,3,15))$rmse)   #s(3 by 15) 
-
-
-### density plot
-plot(density(RMSEs.ridge), col=col2t(3, 200), lwd=3
-     #, xlim=c(0.030, 0.057)
-     , xlim=c(0.034, 0.049)
-     , ylim=c(0,1300)
-     , main=""
-     , xlab="RMSE"
-     , yaxt="n"
-     , type="n")
-lines(density(RMSEs.bw15), col=col2t(2,200), lwd=3)
-lines(density(RMSEs.ridge), col=col2t(3,200), lwd=3)
-#lines(density(RMSEs.gam), col=rgb(255,215,0, maxColorValue = 255), lwd=3)
-lines(density(RMSEs.gam.3.15), col=rgb(255,215,0, maxColorValue = 255), lwd=3)
-#lines(density(RMSEs.gam.3p15), col=4, lwd=3)
-lines(density(RMSEs.gam.3by15), col=4, lwd=3)
-
-
-shadebands( x  = density(RMSEs.bw15)$x
-            ,lo = rep(0, length(density(RMSEs.bw15)$x))
-            ,hi = density(RMSEs.bw15)$y
-            , col=col2t(2,90)
-)
-shadebands( x  = density(RMSEs.ridge)$x
-            ,lo = rep(0, length(density(RMSEs.ridge)$x))
-            ,hi = density(RMSEs.ridge)$y
-            ,col = col2t(3,90)
-)
-# 
-# shadebands( x  = density(RMSEs.gam)$x
-#             ,lo = rep(0, length(density(RMSEs.gam)$x))
-#             ,hi = density(RMSEs.gam)$y
-#             , col=rgb(255,215,0, maxColorValue = 255, alpha=90)
-# )
-
-
-shadebands( x  = density(RMSEs.gam.3.15)$x
-            ,lo = rep(0, length(density(RMSEs.gam.3.15)$x))
-            ,hi = density(RMSEs.gam.3.15)$y
-            , col=rgb(255,215,0, maxColorValue = 255, alpha=90)
-)
-
-legend("topright"
-       , legend = c("bw15", "ridge", "am")
-       , fill = c(2,3,rgb(255,215,0, maxColorValue = 255))
-       #, lwd=2
-       #, lty=1:length(list.of.arrays)
-       #, col=1:length(list.of.arrays)
-       , cex=1
-       , horiz = FALSE
-       , ncol = 1
-)
-
-
-
-
-## test difference between s(2,30) and s(3,15)
-var.test(RMSEs.gam.3.15, test.gam2.30)
-t.test(RMSEs.gam.3.15, test.gam2.30, paired = FALSE, var.equal = TRUE)
-# ----> Difference is NOT significant
- 
-
 
 
 
@@ -872,8 +706,6 @@ text(7,0.049, "tree", col="darkblue", srt=90)
 
 abline(h=mean(RMSEs.bw15), col=2, lty=2)
 
-#col=c(1,2,3,4,5,6,"darkblue")
-#for (i in 1:length(RMSEs)) points(i, median(RMSEs[[i]]), pch="-", col=col[i], cex=3)
 
 
 #reset default
@@ -893,7 +725,7 @@ stack.ridge.fitted <- matrix(NA,nrow=length(2:92), ncol = 10)
 for(i in 1:10) stack.ridge.fitted[,i] <- matr %*% temp.ridge$fold.coefficients[,i]
 
 #plot
-plot(x,y, pch=16, col=tgrey(0.2), xlab="2016 day of year", ylab="% support for Trump", cex=2
+plot(x,y, pch=16, col=tgrey(0.2), xlab="2016 day of year", ylab="Support for Trump", cex=2
      , ylim=c(min(y)-0.02, max(y)+0.07)
      #, type="n"
      )
@@ -966,75 +798,24 @@ legend("topleft"
 
 
 
-### compare LL3, LL15 and stacking with AM
+
+### comparing bw3, bw15, ridge and trees
 
 reset.df()
-
-#fit model
-set.seed(1)
-
-llcv.fit <- llcv(x,y,bandwidths = 1:30, n.folds=10)
-
-gam.fit <- gam(y~s(fitted.bw3,fitted.bw15), data=llcv.fit$data)
-
-tofit <- data.frame(fitted.bw3=llreg(x,y,3)$y, fitted.bw15=llreg(x,y,15)$y)
-
-
-#plot
-plot(x,y, pch=16, col=tgrey(0.15), xlab="2016 day of year", ylab="% support for Trump", cex=2
+par(mfrow=c(1,1))
+plot(x,y, pch=16, col=tgrey(0.15), xlab="2016 day of year", ylab="Support for Trump", cex=2
      , ylim=c(min(y)-0.02, max(y)+0.07)
      #, type="n"
 )
 
-lines(ll3, col=rgb(0,0,0, 0.7), lwd=3 )#, lty=2)
-lines(ll15, col=tred(0.7), lwd=3 )#, lty=4)
-lines(2:92, predict(gam.fit, tofit), col=7, lwd=3)
-
-legend("topleft"
-       ,legend=c( "bw 3","bw 15", 'stacking am')
-       ,lwd=3
-       #,lty=c(2,4)
-       ,col=c(1,2, 7)
-       ,cex=0.65
-       #,horiz=TRUE
-       , bg=tgrey(0.1)
-       , seg.len=2
-)
-
-
-#close up
-
-plot(ll3, col=rgb(0,0,0, 0.7), lwd=2, type="l" , ylim=c(0.34,0.47))#, lty=2)
-lines(ll15, col=tred(0.7), lwd=2 )#, lty=4)
-lines(2:92, predict(gam.fit, tofit), col=7, lwd=2, type="l")
-
-legend("topleft"
-       ,legend=c( "bw 3","bw 15", 'stacking am')
-       ,lwd=3
-       #,lty=c(2,4)
-       ,col=c(1,2, 7)
-       ,cex=0.65
-       #,horiz=TRUE
-       , bg=tgrey(0.1)
-       , seg.len=2
-)
-
-
-
-
-### comparing bw3, bw15, ridge and trees
-
-
-par(mfrow=c(1,1))
-plot(ll15, col=col2t(2,200), lwd=3, type="l", xlab="2016 day of year", ylab="Support for Trump"
-     , ylim=c(0.34,0.47))
-
 lines(ll3, lwd=3, lty=2, col=col2t(1,200))
+lines(ll15, col=col2t(2,200), lwd=2 )#, lty=4)
+
 for (k in 10) lines(2:92,temp.fitted.tree[,k], col=rgb(0,0,128,200, maxColorValue = 255), lwd=3)
 for (k in 1) lines(2:92,stack.ridge.fitted[,k], col=col2t(3,200), lwd=3)
 
 legend("topleft"
-       ,legend=c("bw3","bw15", "ridge", "stacking tree")
+       ,legend=c("bw3","bw15", "stacking tree", "stacking ridge")
        ,lwd=2
        , lty=c(2,1,1,1)
        #,lty=c(1,1,1)
@@ -1045,5 +826,27 @@ legend("topleft"
        , seg.len=3
 )
 
+
+## closeup
+
+par(mfrow=c(1,1))
+plot(ll15, col=col2t(2,200), lwd=3, type="l", xlab="2016 day of year", ylab="Support for Trump"
+     , ylim=c(0.34,0.47))
+
+lines(ll3, lwd=3, lty=2, col=col2t(1,200))
+for (k in 10) lines(2:92,temp.fitted.tree[,k], col=rgb(0,0,128,200, maxColorValue = 255), lwd=3)
+for (k in 1) lines(2:92,stack.ridge.fitted[,k], col=col2t(3,200), lwd=3)
+
+legend("topleft"
+       ,legend=c("bw3","bw15", "stacking tree", "stacking ridge")
+       ,lwd=2
+       , lty=c(2,1,1,1)
+       #,lty=c(1,1,1)
+       ,col=c(1,2,rgb(0,0,128,maxColorValue = 255), 3)
+       ,cex=0.65
+       #,horiz=TRUE
+       , bg=tgrey(0.1)
+       , seg.len=3
+)
 
 
